@@ -1,2 +1,3 @@
 # krypton
-python AES file encryption.
+Symmetric AES encryption.
+require pycrypto module.
