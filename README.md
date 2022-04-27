@@ -1,3 +1,3 @@
 # krypton
-Symmetric AES encryption.
-require pycrypto module.
+#Symmetric AES encryption.
+#require pycrypto module.
