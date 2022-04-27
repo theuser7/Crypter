@@ -42,35 +42,18 @@ def main():
         raise Exception("Choose -e or -d action.")
     if args.e == False and args.d == False:
         raise Exception("Choose -e or -d action.")
-
     if not os.path.exists(args.f):
         raise Exception("File not found.")
-
     if os.path.exists(args.o):
         raise Exception("This filename already exists.")
-
     if len(args.k) != 16 and len(args.k) != 24 and len(args.k) != 32:
         print(f"Size of your current key: {len(args.k)} digits.\n")
         raise Exception("Key sizes: 16, 24 or 32 digits.")
-
     if args.e and args.f and args.k and args.o: 
         ivgen = os.urandom(16)
         Encrypter(args.k.encode(), ivgen, args.f, args.o)
-
     elif args.d and args.f and args.k and args.o:
         Decrypter(args.k.encode(), args.f, args.o)
-
-
-print("""
-    
-                                            ██╗  ██╗██████╗ ██╗   ██╗██████╗ ████████╗ ██████╗ ███╗   ██╗
-                                            ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔══██╗╚══██╔══╝██╔═══██╗████╗  ██║
-                                            █████╔╝ ██████╔╝ ╚████╔╝ ██████╔╝   ██║   ██║   ██║██╔██╗ ██║
-                                            ██╔═██╗ ██╔══██╗  ╚██╔╝  ██╔═══╝    ██║   ██║   ██║██║╚██╗██║
-                                            ██║  ██╗██║  ██║   ██║   ██║        ██║   ╚██████╔╝██║ ╚████║
-                                            ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝        ╚═╝    ╚═════╝ ╚═╝  ╚═══╝                                                                                                    
-""")
-
 
 main()
 
