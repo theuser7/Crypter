@@ -2,4 +2,4 @@
 
 #Symmetric AES encryption cbc mode
 
-#pip install pycrypto
+#pip install pycryptodome
