@@ -1,5 +1,5 @@
 # krypton
 
-#Symmetric AES encryption.
+#Symmetric AES encryption cbc mode
 
-#Require pycrypto module.
+#pip install pycrypto
