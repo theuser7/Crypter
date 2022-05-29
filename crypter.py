@@ -11,6 +11,7 @@ class Crypter:
         self.filein = filein
         self.fileout = fileout
 
+
     def Encrypter(self):
         salt = self.password.encode()
         key = scrypt(self.password.encode(), salt, 32, N=2**14, r=8, p=1)
@@ -25,6 +26,7 @@ class Crypter:
                         break
                     enc = cipher.encrypt(chunk)
                     fo.write(enc)
+
 
     def Decrypter(self):
         salt = self.password.encode()
@@ -41,11 +43,18 @@ class Crypter:
                     dec = cipher.decrypt(chunk)
                     fo.write(dec)
 
-
 def main():
     parser = argparse.ArgumentParser(prog='Crypter.py',formatter_class=argparse.RawDescriptionHelpFormatter,
-            description="Encrypt files with AES 256-bit using Crypter tool.",
-            epilog="\nExample to encrypt:\n  python3 Crypter.py -e -f filename.pdf -k password -o filename.pdf.bin\n\nExample to decrypt:\n python3 Crypter.py -d -f filename.pdf.bin -k password -o filename.pdf")
+        description="Encrypt files with AES 256-bit using Crypter tool.",
+        epilog="""
+
+        Example to encrypt:
+            python3 crypter.py -e -f filename.pdf -k password -o filename.pdf.bin
+    
+
+        Example to decrypt:
+            python3 crypter.py -d -f filename.pdf.bin -k password -o filename.pdf""")
+
     parser.add_argument('-e','-E', action='store_true', help='  Action encrypt.')
     parser.add_argument('-d','-D', action='store_true', help='  Action decrypt.')
     parser.add_argument('-k', type=str, help='  Password, minimum password length 8 digits.',required=True)
@@ -68,7 +77,7 @@ def main():
 
     if len(args.k) < 8 or len(args.k) > 32:
         raise Exception("Very small password.")
-
+    
     if args.e and args.f and args.k and args.o:
         if args.f.endswith(".bin"):
             raise Exception("The file is encrypted.")
