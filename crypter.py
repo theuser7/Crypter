@@ -1,3 +1,4 @@
+from termcolor import colored
 from Crypto.Cipher import AES
 from Crypto.Util import Counter
 from Crypto.Protocol.KDF import scrypt
@@ -11,7 +12,6 @@ class Crypter:
         self.filein = filein
         self.fileout = fileout
 
-
     def Encrypter(self):
         salt = self.password.encode()
         key = scrypt(self.password.encode(), salt, 32, N=2**14, r=8, p=1)
@@ -19,14 +19,13 @@ class Crypter:
         cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
         with open(self.filein,'rb') as fi:
             with open(self.fileout,'wb') as fo:
-                print("Encrypting...")
+                print(colored("[+] Encrypting...","green"))
                 while True:
                     chunk = fi.read()
                     if len(chunk) == 0:
                         break
                     enc = cipher.encrypt(chunk)
                     fo.write(enc)
-
 
     def Decrypter(self):
         salt = self.password.encode()
@@ -35,7 +34,7 @@ class Crypter:
         cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
         with open(self.filein,'rb') as fi:
             with open(self.fileout,'wb') as fo:
-                print("Decrypting...")
+                print(colored("[+] Decrypting...","green"))
                 while True:
                     chunk = fi.read()
                     if len(chunk) == 0:
@@ -57,40 +56,44 @@ def main():
 
     parser.add_argument('-e','-E', action='store_true', help='  Action encrypt.')
     parser.add_argument('-d','-D', action='store_true', help='  Action decrypt.')
-    parser.add_argument('-k', type=str, help='  Password, minimum password length 8 digits.',required=True)
+    parser.add_argument('-k', type=str, help='  Password, minimum password length 8 digits, maximum 32 digits.',required=True)
     parser.add_argument('-f', type=str, help='  Input file path.', required=True)
     parser.add_argument('-o', type=str, help='  Output file path.', required=True)
     args = parser.parse_args()
 
 
     if args.e == True and args.d == True:
-        raise Exception("Choose -e or -d action.")
+        raise Exception(colored("[!] Choose -e or -d action.","red"))
 
     if args.e == False and args.d == False:
-        raise Exception("Choose -e or -d action.")
+        raise Exception(colored("[!] Choose -e or -d action.","red"))
 
     if not os.path.exists(args.f):
-        raise Exception("File not found.")
+        raise Exception(colored("[!] File not found.","red"))
 
     if os.path.exists(args.o):
-        raise Exception("This filename already exists.")
+        raise Exception(colored("[!] This filename already exists.","red"))
 
-    if len(args.k) < 8 or len(args.k) > 32:
-        raise Exception("Very small password.")
+    if len(args.k) < 8:
+        print(colored(f"[*] current password length {len(args.k)} digits.","green"))
+        raise Exception(colored("[!] Mininum password length 8 digits.","red"))
+    elif len(args.k) > 32:
+        print(colored(f"[*] current password length {len(args.k)} digits.","green"))
+        raise Exception(colored("[!] Maximum password length 32 digits.","red"))
     
     if args.e and args.f and args.k and args.o:
         if args.f.endswith(".bin"):
-            raise Exception("The file is encrypted.")
+            raise Exception(colored("[*] The file is encrypted.","green"))
         if not args.o.endswith(".bin"):
-            raise Exception("Use the '.bin' extension after the encrypted output file extension.")
+            raise Exception(colored("[*] Use the '.bin' extension after the encrypted output file extension.","green"))
         cryp = Crypter(args.k, args.f, args.o)
         cryp.Encrypter()
 
     elif args.d and args.f and args.k and args.o:
         if not args.f.endswith(".bin"):
-            raise Exception("The file is not encrypted.")
+            raise Exception(colored("[*] The file is not encrypted.","green"))
         if args.o.endswith(".bin"):
-            raise Exception("Use the decrypted output file name without the '.bin' extension.")
+            raise Exception(colored("[*] Use the decrypted output file name without the '.bin' extension.","green"))
         cryp = Crypter(args.k, args.f, args.o)
         cryp.Decrypter()
 
